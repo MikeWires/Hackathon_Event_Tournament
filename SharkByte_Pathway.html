@@ -9,21 +9,31 @@
             --blue: #1b2f9e;
             --blue-line: #3b78d8;
             --strip: #e8ecf6;
-            --page: #f0f0f0;
-            --border: #d5d5d5;
+            --page: #eef1f6;
+            --border: #d5d9e0;
             --link: #2a5db0;
+            --text: #1f2933;
+            --muted: #5f6b7a;
         }
         * { box-sizing: border-box; }
         body {
             margin: 0;
             background: var(--page);
             font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive, sans-serif;
-            color: #111;
+            color: var(--text);
             font-size: 14px;
         }
 
         /* ---- Top banner ---- */
-        .topbar { background: var(--blue); height: 46px; border-bottom: 2px solid var(--blue-line); }
+        /* Banner: skyline image across the top, with a blue tint to tie it to the template colours */
+        .topbar {
+            height: 92px;
+            display: flex; align-items: stretch; gap: 14px; padding: 0;
+            background:
+                linear-gradient(rgba(27, 47, 158, 0.25), rgba(27, 47, 158, 0.25)),
+                url("images/sharkbyte-background.jpg") center 38% / cover no-repeat;
+            border-bottom: 2px solid var(--blue-line);
+        }
         .strip { background: var(--strip); height: 22px; }
         .namebar { background: #fff; padding: 4px 46px 6px; border-bottom: 1px solid var(--border); }
         .namebar h1 {
@@ -33,8 +43,11 @@
             font-size: 28px;
         }
 
+        /* School logos, cropped straight from the template image */
+        .logos-img { height: 100%; width: auto; display: block; }
+
         /* ---- Planner heading ---- */
-        .planner-head { padding: 6px 12px 10px; border-bottom: 1px solid #cfcfcf; }
+        .planner-head { padding: 6px 12px 10px; border-bottom: 1px solid var(--border); background: #f7f8fa; }
         .planner-head h2 { margin: 0; font-weight: 400; font-size: 24px; }
         .planner-head .goals { margin-top: 6px; font-size: 13px; font-weight: 700; }
         .planner-head .goals span { font-weight: 400; }
@@ -43,22 +56,23 @@
         .panels {
             display: grid;
             grid-template-columns: 1fr 1.1fr 1fr;
-            gap: 8px;
-            padding: 10px 8px;
-            height: calc(100vh - 210px);
+            gap: 10px;
+            padding: 12px 10px;
+            height: calc(100vh - 256px);
             min-height: 420px;
         }
         .panel {
             background: #fff;
             border: 1px solid var(--border);
-            border-radius: 4px;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(16, 24, 40, 0.08);
             display: flex;
             flex-direction: column;
             min-width: 0;
             overflow: hidden;
         }
         .panel.collapsed .panel-body { display: none; }
-        .panel-tools { display: flex; justify-content: flex-end; gap: 4px; padding: 6px 8px; border-bottom: 1px solid #eee; }
+        .panel-tools { display: flex; justify-content: flex-end; gap: 4px; padding: 6px 8px; border-bottom: 1px solid #eceff3; }
         .panel-body { overflow-y: auto; flex: 1; padding: 0 10px 12px; }
         .icon-btn {
             width: 20px; height: 20px; padding: 0;
@@ -74,11 +88,11 @@
         .dots { color: #444; letter-spacing: 1px; font-size: 14px; }
 
         /* ---- Planning tools accordion ---- */
-        .accordion { margin: 0 4px; border: 1px solid var(--border); }
+        .accordion { margin: 0 4px; border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
         .acc-item + .acc-item { border-top: 1px solid var(--border); }
         .acc-head {
-            width: 100%; text-align: left; background: #f4f4f4; border: 0; padding: 10px 12px;
-            font: inherit; font-size: 13px; color: #111; cursor: pointer; display: flex; align-items: center; gap: 10px;
+            width: 100%; text-align: left; background: #f4f5f7; border: 0; padding: 10px 12px;
+            font: inherit; font-size: 13px; color: var(--text); cursor: pointer; display: flex; align-items: center; gap: 10px;
         }
         .acc-head .chev { color: var(--link); font-size: 12px; width: 12px; transition: transform .15s; }
         .acc-item.open .acc-head { border-bottom: 2px solid var(--blue-line); }
@@ -88,6 +102,17 @@
         .acc-body ul { margin: 4px 0; padding-left: 18px; }
         .acc-body li { margin-bottom: 4px; }
 
+        /* ---- Checklist ---- */
+        .checklist { margin: 14px 4px 0; border: 1px solid var(--blue-line); border-radius: 4px; }
+        .checklist-head { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+        .checklist-head h4 { margin: 0; font-weight: 400; font-size: 20px; }
+        .checklist-head span { font-size: 12px; color: var(--muted); }
+        .checklist ul { list-style: none; margin: 0; padding: 6px 12px 10px; }
+        .checklist li { padding: 5px 0; font-size: 12.5px; }
+        .checklist label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+        .checklist input { margin-top: 2px; }
+        .checklist input:checked + span { color: var(--muted); text-decoration: line-through; }
+
         /* ---- Middle: course picker ---- */
         .picker-bar { display: flex; align-items: center; gap: 12px; margin: 14px 10px 6px; font-size: 13px; }
         .btn {
@@ -96,13 +121,13 @@
         }
         .btn:disabled { opacity: .5; cursor: default; }
         .picker h4 { font-weight: 400; font-size: 20px; margin: 14px 10px 8px; }
-        .course-list { border: 1px solid #e4e4e4; border-radius: 4px; margin: 0 6px; }
-        .course-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-bottom: 1px solid #eee; }
+        .course-list { border: 1px solid #e4e7ec; border-radius: 4px; margin: 0 6px; }
+        .course-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-bottom: 1px solid #eceff3; }
         .course-row:last-child { border-bottom: 0; }
         .course-row input { width: 16px; height: 16px; margin-top: 3px; }
         .course-row .code { font-weight: 700; font-size: 13px; }
         .course-row .name { font-size: 12.5px; }
-        .course-row .note { font-size: 11.5px; color: #555; margin-top: 2px; }
+        .course-row .note { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
         .course-row.added { opacity: .45; }
         .badge { display: inline-block; background: #fdecea; color: #a12622; border-radius: 3px; padding: 0 5px; font-size: 10.5px; margin-left: 6px; }
 
@@ -110,25 +135,192 @@
         .term-card { border: 1px solid var(--border); border-radius: 4px; margin: 0 4px 12px; padding: 12px 16px 6px; }
         .term-card h4 { font-weight: 400; font-size: 20px; margin: 0; display: flex; justify-content: space-between; align-items: center; }
         .term-card .starts { font-size: 11.5px; margin-top: 2px; }
-        .term-card .count { margin: 22px 0 0; font-size: 13px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
-        .plan-row { min-height: 50px; border-bottom: 1px solid #e6e6e6; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; }
+        .term-card .count { margin: 22px 0 0; font-size: 13px; border-bottom: 1px solid #dde1e7; padding-bottom: 4px; }
+        .plan-row { min-height: 50px; border-bottom: 1px solid #e9ecf0; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; }
         .plan-row .remove { background: none; border: 0; color: var(--link); cursor: pointer; font: inherit; font-size: 11.5px; }
         .plan-row .code { font-weight: 700; margin-right: 6px; }
+
+        /* ---- Term tabs & section rows ---- */
+        .term-tabs { display: flex; gap: 6px; margin: 12px 10px 0; flex-wrap: wrap; }
+        .term-tab { background: #f4f5f7; border: 1px solid var(--border); border-radius: 3px; padding: 4px 10px; font: inherit; font-size: 12px; cursor: pointer; color: var(--text); }
+        .term-tab.active { background: #e6f0fb; border-color: #8fb3e0; color: #12306b; }
+        .course-hint { margin: 0 10px 8px; font-size: 12px; color: var(--muted); }
+        .sec-meta { font-size: 12px; margin-top: 2px; line-height: 1.45; }
+        .status-open { color: #1c7a2f; font-weight: 700; }
+        .term-card + .term-card { margin-top: 12px; }
+        .plan-empty { color: var(--muted); font-size: 12px; padding: 10px 0; }
 
         @media (max-width: 900px) {
             .panels { grid-template-columns: 1fr; height: auto; }
             .panel { max-height: 80vh; }
         }
+
+        /* ---- Intro Splash Animation Overlay (Shark Laser & Building Explosion) ---- */
+        #splash-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #231048 url("images/splash-screen.jpg") center / cover no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            padding-bottom: 5vh;
+            overflow: hidden;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            cursor: pointer;
+            animation: screenShake 0.45s ease-in-out 0.7s 3;
+        }
+        #splash-overlay.hidden {
+            opacity: 0;
+            transform: scale(1.06);
+            pointer-events: none;
+        }
+        /* Animated laser beam surge from shark (left) to building (right) */
+        .laser-surge {
+            position: absolute;
+            top: 58.5%;
+            left: 16%;
+            width: 60%;
+            height: 22px;
+            transform: translateY(-50%) scaleX(0);
+            transform-origin: left center;
+            background: linear-gradient(90deg, #ffffff 0%, #38bdf8 40%, #00ffff 80%, #ffffff 100%);
+            box-shadow: 0 0 24px #00ffff, 0 0 48px #38bdf8, 0 0 80px #0284c7;
+            border-radius: 999px;
+            animation: fireLaser 2.2s ease-out forwards;
+            pointer-events: none;
+        }
+        /* Building explosion fireball on the right building */
+        .building-explosion {
+            position: absolute;
+            top: 58%;
+            left: 82%;
+            width: 340px;
+            height: 340px;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            background: radial-gradient(circle, #ffffff 0%, #fef08a 22%, #f97316 48%, #ef4444 70%, rgba(239, 68, 68, 0) 100%);
+            box-shadow: 0 0 60px #f97316, 0 0 120px #ef4444, 0 0 180px #fef08a;
+            animation: explodeBuilding 2.4s ease-out 0.65s forwards;
+            pointer-events: none;
+        }
+        .explosion-shockwave {
+            position: absolute;
+            top: 58%;
+            left: 82%;
+            width: 120px;
+            height: 120px;
+            transform: translate(-50%, -50%) scale(0);
+            border-radius: 50%;
+            border: 8px solid #fef08a;
+            box-shadow: 0 0 40px #38bdf8, inset 0 0 30px #f97316;
+            animation: shockwaveRing 1.8s ease-out 0.7s forwards;
+            pointer-events: none;
+        }
+        .explosion-flash {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 82% 58%, rgba(255, 255, 255, 0.95), rgba(251, 146, 60, 0.55) 45%, transparent 75%);
+            opacity: 0;
+            animation: screenFlash 1.6s ease-out 0.75s forwards;
+            pointer-events: none;
+        }
+        .debris-piece {
+            position: absolute;
+            top: 58%;
+            left: 82%;
+            width: 14px;
+            height: 14px;
+            background: #fef08a;
+            box-shadow: 0 0 10px #f97316, 4px 4px 0 #1e293b;
+            opacity: 0;
+            pointer-events: none;
+            animation: flyDebris 1.8s cubic-bezier(0.16, 1, 0.3, 1) 0.72s forwards;
+        }
+        .splash-enter-btn {
+            position: relative;
+            z-index: 2;
+            background: rgba(18, 48, 107, 0.92);
+            color: #ffffff;
+            border: 2px solid #76b1ff;
+            border-radius: 999px;
+            padding: 12px 32px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(118, 177, 255, 0.45);
+            cursor: pointer;
+            animation: splashPulse 1.8s infinite ease-in-out;
+        }
+        @keyframes fireLaser {
+            0% { transform: translateY(-50%) scaleX(0); opacity: 1; }
+            25% { transform: translateY(-50%) scaleX(1); opacity: 1; height: 28px; }
+            65% { transform: translateY(-50%) scaleX(1); opacity: 1; height: 34px; filter: brightness(1.5); }
+            100% { transform: translateY(-50%) scaleX(1); opacity: 0; height: 6px; }
+        }
+        @keyframes explodeBuilding {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+            15% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+            45% { transform: translate(-50%, -50%) scale(1.85); opacity: 1; filter: contrast(1.3); }
+            75% { transform: translate(-50%, -50%) scale(2.4); opacity: 0.85; background: radial-gradient(circle, #f97316 0%, #b91c1c 45%, #1e293b 75%, transparent 100%); }
+            100% { transform: translate(-50%, -50%) scale(2.9); opacity: 0; }
+        }
+        @keyframes shockwaveRing {
+            0% { transform: translate(-50%, -50%) scale(0.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(6.5); opacity: 0; border-width: 1px; }
+        }
+        @keyframes screenFlash {
+            0% { opacity: 0; }
+            20% { opacity: 1; }
+            55% { opacity: 0.7; }
+            100% { opacity: 0; }
+        }
+        @keyframes flyDebris {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(0.3); opacity: 0; }
+        }
+        @keyframes screenShake {
+            0%, 100% { transform: translate(0, 0); }
+            20% { transform: translate(-12px, 8px); }
+            40% { transform: translate(12px, -10px); }
+            60% { transform: translate(-10px, -6px); }
+            80% { transform: translate(10px, 8px); }
+        }
+        @keyframes splashPulse {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-4px) scale(1.04); }
+        }
     </style>
 </head>
 <body>
-    <div class="topbar"></div>
+    <!-- Intro Splash Overlay -->
+    <div id="splash-overlay" role="dialog" aria-label="SharkByte Welcome Screen" title="Click anywhere to enter SharkByte">
+        <div class="laser-surge"></div>
+        <div class="explosion-shockwave"></div>
+        <div class="building-explosion"></div>
+        <div class="explosion-flash"></div>
+        <div class="debris-piece" style="--dx:-240px;--dy:-190px;--rot:420deg;background:#f97316"></div>
+        <div class="debris-piece" style="--dx:-310px;--dy:-60px;--rot:-360deg;background:#fef08a"></div>
+        <div class="debris-piece" style="--dx:-180px;--dy:170px;--rot:300deg;background:#38bdf8"></div>
+        <div class="debris-piece" style="--dx:160px;--dy:-220px;--rot:-480deg;background:#ef4444"></div>
+        <div class="debris-piece" style="--dx:210px;--dy:140px;--rot:520deg;background:#e2e8f0"></div>
+        <div class="debris-piece" style="--dx:-90px;--dy:-260px;--rot:260deg;background:#facc15"></div>
+        <div class="debris-piece" style="--dx:95px;--dy:220px;--rot:-390deg;background:#fb923c"></div>
+        <div class="debris-piece" style="--dx:-260px;--dy:95px;--rot:610deg;background:#94a3b8"></div>
+        <button class="splash-enter-btn" id="splash-enter-btn" type="button">Enter SharkByte Pathway →</button>
+    </div>
+
+    <div class="topbar">
+        <img class="logos-img" src="images/logos/logos-from-template.jpg" alt="Miami Dade College, University of Florida, MIT, University of Miami and FIU logos">
+    </div>
     <div class="strip"></div>
     <div class="namebar"><h1>Insert Name</h1></div>
 
     <div class="planner-head">
         <h2>My Planner</h2>
-        <div class="goals">My Goals: <span>B.S. Computer Science at FIU (MDC Connect4Success transfer pathway, 2026–2027)</span></div>
+        <div class="goals">My Goals: <span id="goals-summary">B.S. Computer Science at FIU (MDC Connect4Success transfer pathway, 2026–2027)</span></div>
     </div>
 
     <main class="panels">
@@ -172,6 +364,57 @@
                             </ul>
                         </div>
                     </div>
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> Student Onboarding &amp; Targets</button>
+                        <div class="acc-body">
+                            <p style="margin:0 0 6px"><b>Target Universities:</b></p>
+                            <div id="uni-targets" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px"></div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px">
+                                <label>GPA: <input type="number" id="inp-gpa" step="0.01" min="0" max="4" value="3.45" style="width:60px"></label>
+                                <label>Max Cr: <input type="number" id="inp-maxcr" min="3" max="18" value="12" style="width:50px"></label>
+                                <label>Work Hrs/Wk: <input type="number" id="inp-work" min="0" max="60" value="15" style="width:50px"></label>
+                                <label>Campus:
+                                    <select id="inp-campus">
+                                        <option value="ALL">All</option>
+                                        <option value="Wolfson">Wolfson</option>
+                                        <option value="North">North</option>
+                                        <option value="Kendall">Kendall</option>
+                                        <option value="Homestead">Homestead</option>
+                                        <option value="Padron">Padron</option>
+                                        <option value="West">West</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> University Comparison (7 Schools)</button>
+                        <div class="acc-body" id="uni-compare-body"></div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> What-If Simulator</button>
+                        <div class="acc-body">
+                            <div style="display:flex;flex-direction:column;gap:6px">
+                                <button type="button" class="btn" id="whatif-phy">What if PHY 2048 is full?</button>
+                                <button type="button" class="btn" id="whatif-work">What if I work 20 hours/week?</button>
+                                <button type="button" class="btn" id="whatif-uni">What if I switch to UF + MIT?</button>
+                            </div>
+                            <div id="whatif-output" style="margin-top:8px;font-size:12px;color:#12306b"></div>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> Career Readiness &amp; Cost Estimate</button>
+                        <div class="acc-body">
+                            <p style="margin:0 0 4px"><b>Internships &amp; Certs:</b> Google STEP, Microsoft Explore, NSF REU, PCEP Python, AWS Cloud Practitioner, CompTIA Security+.</p>
+                            <p style="margin:4px 0"><b>Est. MDC Lower-Division Cost:</b> ~$120/credit (in-state estimate).</p>
+                            <p style="margin:4px 0 0"><b>Est. Upper-Division (2 yrs):</b> ~$13,000 in-state public (FIU/UF/FSU/UCF) • ~$66k–$124k out-of-state/private (GT/MIT/UM). <i>All figures are estimates.</i></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checklist">
+                    <div class="checklist-head"><h4>Checklist</h4><span id="check-progress">0 of 0 done</span></div>
+                    <ul id="check-list"></ul>
                 </div>
             </div>
         </section>
@@ -187,7 +430,9 @@
                     <span><span id="selected-count">0</span> item(s) selected</span>
                     <button class="btn" id="add-btn" disabled>Add to Term</button>
                 </div>
-                <h4>Fall 2026</h4>
+                <div class="term-tabs" id="term-tabs"></div>
+                <h4 id="picker-title">Fall 2026</h4>
+                <div class="course-hint" id="picker-hint"></div>
                 <div class="course-list" id="course-list"></div>
             </div>
         </section>
@@ -197,21 +442,16 @@
             <div class="panel-tools"><button class="icon-btn" id="toggle-right" title="Collapse panel">→</button></div>
             <div class="panel-body">
                 <h3>My Academic Plan <span class="dots">•••</span></h3>
-                <div class="term-card">
-                    <h4>Fall 2026 <span class="dots">•••</span></h4>
-                    <div class="starts">Starts August 24, 2026</div>
-                    <div class="count">Courses (<span id="plan-count">0</span>)</div>
-                    <div id="plan-rows"></div>
-                </div>
+                <div id="plan-cards"></div>
             </div>
         </section>
     </main>
 
     <script>
-        // Course data taken from the 2026–2027 MDC → FIU Computer Science transfer guide.
+        // Fall 2026 courses come from the 2026–2027 MDC → FIU Computer Science transfer guide.
         const COURSES = [
             { id: "MAC2311", code: "MAC 2311", name: "Calculus and Analytical Geometry 1", note: "FIU MAC 2311", required: "Required before transfer" },
-            { id: "MAC2312", code: "MAC 2312", name: "Calculus and Analytical Geometry 2", note: "FIU MAC 2312" },
+            { id: "MAC2312", code: "MAC 2312", name: "Calculus and Analytical Geometry 2", note: "FIU MAC 2312 – class sections are listed under Spring 2027 and Summer 2027" },
             { id: "COP1047C", code: "COP 1047C", name: "Python Programming", note: "FIU COP 2047" },
             { id: "MAD2104", code: "MAD 2104", name: "Discrete Mathematics", note: "FIU MAD 2104 (recommended)" },
             { id: "COP2805C", code: "COP 2805C", name: "Advanced Java Programming", note: "FIU COP 3337 (upper-division credit, recommended)" },
@@ -220,68 +460,206 @@
             { id: "BSC2010", code: "BSC 2010 + 2010L", name: "Principles of Biology 1 + Lab", note: "Natural Science – Group 1 (State Core)" }
         ];
 
-        const plan = [];
-        const selected = new Set();
+        // MAC 2312 class sections (from mac_2312_spring_2027_schedule.json and mac_2312_schedule.json).
+        const SPRING_2027_SECTIONS = [
+                {"option":1,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 2067","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 9:50AM to 11:30AM","room":"To be announced","instructor":"Jaime Bestard"},
+                {"option":2,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 4422","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 6:00PM to 7:40PM","room":"To be announced","instructor":"Mohammad Shakil"},
+                {"option":3,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 7314","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 8:50AM to 10:30AM","room":"To be announced","instructor":"Roberto Cabezas"},
+                {"option":4,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 7732","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 10:40AM to 12:20PM","room":"North-Bldg 1, Room 1219-00","instructor":"Manuel Carames"},
+                {"option":5,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 2065","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 8:50AM to 10:30AM","room":"Wolfson-Bldg 2, Room 2215-00","instructor":"Alvio Dominguez"},
+                {"option":6,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 2066","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 6:00PM to 7:40PM","room":"To be announced","instructor":"Jorge Prendes"},
+                {"option":7,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 4414","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday Friday 9:40AM to 10:50AM","room":"Padron-Bldg 6, Room 6087-00","instructor":"Lazaro Borrego Nunez"},
+                {"option":8,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 2685","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 8:50AM to 10:30AM","room":"West-Bldg 2, Room 2221-00","instructor":"Laura Galindo"},
+                {"option":9,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 5384","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 2:20PM to 3:35PM","room":"To be announced","instructor":"Thomas Ferrell"},
+                {"option":10,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 6921","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 10:40AM to 12:20PM","room":"Homestead-Bldg G, Room G203-00","instructor":"Thomas Ferrell"},
+                {"option":11,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 7398","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 10:40AM to 12:20PM","room":"Wolfson-Bldg 2, Room 2304-00","instructor":"Willian Neris"},
+                {"option":12,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 6872","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 8:50AM to 10:30AM","room":"Kendall-Bldg 9, Room 9220-00","instructor":"Lourdes Gonzalez"},
+                {"option":13,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 6873","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 6:00PM to 7:40PM","room":"To be announced","instructor":"Maria Alonso"},
+                {"option":14,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 5065","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Monday Wednesday 6:00PM to 7:40PM","room":"To be announced","instructor":"Edilio Hernandez"},
+                {"option":15,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 11935","meeting_dates":"01/04/2027 - 04/30/2027","days_and_times":"Tuesday Thursday 6:00PM to 7:40PM","room":"Wolfson-Bldg 2, Room 2215-00","instructor":"Jorge Prendes"},
+                {"option":16,"status":"Open","session":"Fourteen Week","class_section":"Lecture - 10147","meeting_dates":"01/19/2027 - 04/30/2027","days_and_times":"Monday Wednesday 9:00AM to 10:20AM","room":"North-Bldg 7, Room 7347-00","instructor":"Carlos Gil"},
+                {"option":17,"status":"Open","session":"Fourteen Week","class_section":"Lecture - 10148","meeting_dates":"01/19/2027 - 04/30/2027","days_and_times":"Monday Wednesday 5:40PM to 7:35PM","room":"To be announced","instructor":"Carlos Canas"}
+            ];
+
+        const SUMMER_2027_SECTIONS = [
+                {"option":1,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 4582","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 8:00AM to 9:30AM","room":null,"instructor":"To be Announced"},
+                {"option":2,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 3502","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Monday Wednesday 5:10PM to 7:20PM","room":null,"instructor":"To be Announced"},
+                {"option":3,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 5140","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 8:00AM to 10:10AM","room":null,"instructor":"To be Announced"},
+                {"option":4,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 2692","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 11:40AM to 1:50PM","room":null,"instructor":"To be Announced"},
+                {"option":5,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 3659","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 8:00AM to 10:10AM","room":null,"instructor":"Raul Alvarez"},
+                {"option":6,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 4540","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 5:20PM to 7:30PM","room":null,"instructor":"Donnell Boles"},
+                {"option":7,"status":"Open","session":"Main Academic Session","class_section":"Lecture - 6098","meeting_dates":"05/10/2027 - 07/30/2027","days_and_times":"Tuesday Thursday 8:00AM to 10:10AM","room":null,"instructor":"To be Announced"},
+                {"option":8,"status":"Open","session":"Six Week - Second","class_section":"Lecture - 2860","meeting_dates":"06/21/2027 - 07/30/2027","days_and_times":"Monday Wednesday 8:00AM to 11:00AM","room":null,"instructor":"Carlos Gil"}
+            ];
+
+        const TERMS = [
+            { id: "fall2026",   name: "Fall 2026",   starts: "August 24, 2026" },
+            { id: "spring2027", name: "Spring 2027", starts: "January 4, 2027",
+              sections: SPRING_2027_SECTIONS, sectionCourse: { code: "MAC 2312", title: "Calc and Analytical Geometry 2" } },
+            { id: "summer2027", name: "Summer 2027", starts: "May 10, 2027",
+              sections: SUMMER_2027_SECTIONS, sectionCourse: { code: "MAC 2312", title: "Calc and Analytical Geometry 2" } }
+        ];
+
+        // plan: items added to terms. selected: checked boxes in the current term.
+        const plan = [];            // { term, id, code, name, detail }
+        const selected = new Set(); // item ids in the active term
+        let activeTerm = TERMS[0].id;
 
         const listEl = document.getElementById("course-list");
-        const planRows = document.getElementById("plan-rows");
         const addBtn = document.getElementById("add-btn");
+        const cardsEl = document.getElementById("plan-cards");
 
         function esc(s) {
-            return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+            return String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        }
+        const term = id => TERMS.find(t => t.id === id);
+        const inPlan = (t, id) => plan.some(p => p.term === t && p.id === id);
+        const termHasCourse = (t, code) => plan.some(p => p.term === t && p.code === code);
+
+        // Items shown in the middle panel for a term.
+        function itemsFor(t) {
+            if (!t.sections) {
+                return COURSES.map(c => ({ id: c.id, code: c.code, name: c.name, note: c.note, badge: c.required }));
+            }
+            return t.sections.map(s => ({
+                id: "sec-" + s.class_section.replace(/\D/g, ""),
+                code: t.sectionCourse.code,
+                name: t.sectionCourse.title,
+                section: s
+            }));
+        }
+
+        function renderTabs() {
+            document.getElementById("term-tabs").innerHTML = TERMS.map(t =>
+                `<button class="term-tab ${t.id === activeTerm ? "active" : ""}" data-term="${t.id}">${esc(t.name)}</button>`).join("");
         }
 
         function renderPicker() {
-            listEl.innerHTML = COURSES.map(c => {
-                const added = plan.includes(c.id);
+            const t = term(activeTerm);
+            document.getElementById("picker-title").textContent = t.name;
+            document.getElementById("picker-hint").textContent = t.sections
+                ? `${t.sectionCourse.code} – ${t.sections.length} sections available. Pick one section for this term.`
+                : "";
+            listEl.innerHTML = itemsFor(t).map(it => {
+                const added = inPlan(t.id, it.id) || (it.section && termHasCourse(t.id, it.code));
+                let body;
+                if (it.section) {
+                    const s = it.section;
+                    body = `
+                        <div><span class="code">${esc(it.code)}</span> <span class="name">${esc(s.class_section)}</span>
+                            <span class="status-open">${esc(s.status)}</span></div>
+                        <div class="sec-meta">${esc(s.days_and_times)}<br>
+                            ${esc(s.meeting_dates)} · ${esc(s.session)}<br>
+                            ${esc(s.instructor)}${s.room ? " · " + esc(s.room) : ""}</div>`;
+                } else {
+                    body = `
+                        <div><span class="code">${esc(it.code)}</span>${it.badge ? `<span class="badge">${esc(it.badge)}</span>` : ""}</div>
+                        <div class="name">${esc(it.name)}</div>
+                        <div class="note">${esc(it.note)}</div>`;
+                }
                 return `
                 <label class="course-row ${added ? "added" : ""}">
-                    <input type="checkbox" data-id="${c.id}" ${added ? "disabled" : ""} ${selected.has(c.id) ? "checked" : ""}>
-                    <div>
-                        <div><span class="code">${esc(c.code)}</span>${c.required ? `<span class="badge">${esc(c.required)}</span>` : ""}</div>
-                        <div class="name">${esc(c.name)}</div>
-                        <div class="note">${esc(c.note)}</div>
-                    </div>
+                    <input type="checkbox" data-id="${it.id}" ${added ? "disabled" : ""} ${selected.has(it.id) ? "checked" : ""}>
+                    <div>${body}</div>
                 </label>`;
             }).join("");
+            updateCount();
+        }
+
+        function updateCount() {
             document.getElementById("selected-count").textContent = selected.size;
             addBtn.disabled = selected.size === 0;
         }
 
         function renderPlan() {
-            document.getElementById("plan-count").textContent = plan.length;
-            const rows = plan.map(id => {
-                const c = COURSES.find(x => x.id === id);
-                return `<div class="plan-row">
-                    <span><span class="code">${esc(c.code)}</span>${esc(c.name)}</span>
-                    <button class="remove" data-id="${id}">Remove</button>
+            cardsEl.innerHTML = TERMS.map(t => {
+                const items = plan.filter(p => p.term === t.id);
+                const rows = items.map(p => `
+                    <div class="plan-row">
+                        <span><span class="code">${esc(p.code)}</span>${esc(p.name)}${p.detail ? `<br><small>${p.detail}</small>` : ""}</span>
+                        <button class="remove" data-term="${t.id}" data-id="${p.id}">Remove</button>
+                    </div>`);
+                while (rows.length < 5) rows.push('<div class="plan-row"></div>'); // empty slots as in the template
+                return `
+                <div class="term-card">
+                    <h4>${esc(t.name)} <span class="dots">•••</span></h4>
+                    <div class="starts">Starts ${esc(t.starts)}</div>
+                    <div class="count">Courses (${items.length})</div>
+                    ${rows.join("")}
                 </div>`;
-            });
-            while (rows.length < 5) rows.push('<div class="plan-row"></div>'); // empty slots as in the template
-            planRows.innerHTML = rows.join("");
+            }).join("");
         }
+
+        document.getElementById("term-tabs").addEventListener("click", e => {
+            const id = e.target.dataset.term;
+            if (!id) return;
+            activeTerm = id;
+            selected.clear();
+            renderTabs();
+            renderPicker();
+        });
 
         listEl.addEventListener("change", e => {
             const id = e.target.dataset.id;
             if (!id) return;
+            const t = term(activeTerm);
+            // Only one section of the same course per term.
+            if (t.sections && e.target.checked) selected.clear();
             e.target.checked ? selected.add(id) : selected.delete(id);
-            document.getElementById("selected-count").textContent = selected.size;
-            addBtn.disabled = selected.size === 0;
+            renderPicker();
         });
 
         addBtn.addEventListener("click", () => {
-            selected.forEach(id => { if (!plan.includes(id)) plan.push(id); });
+            const t = term(activeTerm);
+            itemsFor(t).filter(it => selected.has(it.id)).forEach(it => {
+                if (inPlan(t.id, it.id) || (it.section && termHasCourse(t.id, it.code))) return;
+                const s = it.section;
+                plan.push({
+                    term: t.id, id: it.id, code: it.code, name: it.name,
+                    detail: s ? `${esc(s.class_section)} · ${esc(s.days_and_times)}<br>${esc(s.instructor)}` : ""
+                });
+            });
             selected.clear();
             renderPicker();
             renderPlan();
         });
 
-        planRows.addEventListener("click", e => {
+        cardsEl.addEventListener("click", e => {
             const id = e.target.dataset.id;
             if (!id) return;
-            plan.splice(plan.indexOf(id), 1);
+            const i = plan.findIndex(p => p.term === e.target.dataset.term && p.id === id);
+            if (i > -1) plan.splice(i, 1);
             renderPicker();
             renderPlan();
+        });
+
+        // Transfer checklist (from the 2026–2027 MDC → FIU guide); progress is saved in this browser.
+        const CHECKLIST = [
+            "Complete the Associate in Arts (AA) degree at MDC",
+            "Keep a cumulative transfer GPA of 2.0 or higher",
+            "MAC 2311 – Calculus 1 (before transferring to FIU)",
+            "MAC 2312 – Calculus 2",
+            "COP 1047C – Python Programming",
+            "Natural Science Group 1 + lab (State Core)",
+            "Natural Science Group 2 + lab (Institution Core)",
+            "At least 8 natural science credits with labs",
+            "MAD 2104 – Discrete Mathematics (recommended)",
+            "COP 2805C – Advanced Java (recommended)"
+        ];
+        const CHECK_KEY = "sharkbyte-checklist";
+        let checked = [];
+        try { checked = JSON.parse(localStorage.getItem(CHECK_KEY)) || []; } catch (e) { checked = []; }
+
+        function renderChecklist() {
+            document.getElementById("check-list").innerHTML = CHECKLIST.map((t, i) =>
+                `<li><label><input type="checkbox" data-i="${i}" ${checked.includes(i) ? "checked" : ""}><span>${esc(t)}</span></label></li>`).join("");
+            document.getElementById("check-progress").textContent = `${checked.length} of ${CHECKLIST.length} done`;
+        }
+        document.getElementById("check-list").addEventListener("change", e => {
+            const i = Number(e.target.dataset.i);
+            checked = e.target.checked ? [...new Set([...checked, i])] : checked.filter(x => x !== i);
+            try { localStorage.setItem(CHECK_KEY, JSON.stringify(checked)); } catch (err) { /* storage unavailable */ }
+            renderChecklist();
         });
 
         // Accordion
@@ -305,8 +683,79 @@
             left.classList.remove("collapsed"); right.classList.remove("collapsed"); layout();
         });
 
+        renderChecklist();
+        renderTabs();
         renderPicker();
         renderPlan();
+
+        // University targets & comparison inside the Planning Tools accordion
+        const UNIVERSITIES = [
+            { id: "fiu", short: "FIU", name: "Florida International University", status: "Verified (2026–2027 Guide)", note: "MAC 2311, MAC 2312, COP 1047C, 2 Sci+Labs (8cr), 2.0+ GPA" },
+            { id: "uf",  short: "UF",  name: "University of Florida", status: "Estimated", note: "MAC 2311–2313, PHY 2048–2049, COP 1047C" },
+            { id: "fsu", short: "FSU", name: "Florida State University", status: "Estimated", note: "MAC 2311–2312, COP 1047C, Sci+Labs" },
+            { id: "ucf", short: "UCF", name: "University of Central Florida", status: "Estimated", note: "MAC 2311–2312, PHY 2048–2049, COP 1047C" },
+            { id: "mit", short: "MIT", name: "MIT", status: "Estimated", note: "MAC 2311–2313, PHY 2048–2049, CHM 1045, COP 1047C" },
+            { id: "gt",  short: "GT",  name: "Georgia Tech", status: "Estimated", note: "MAC 2311–2313, PHY 2048–2049, COP 1047C" },
+            { id: "um",  short: "UM",  name: "University of Miami", status: "Estimated", note: "MAC 2311–2312, COP 1047C, Sci+Labs" }
+        ];
+        const selectedUnis = new Set(["fiu"]);
+
+        function renderUniTools() {
+            const targetsEl = document.getElementById("uni-targets");
+            const compareEl = document.getElementById("uni-compare-body");
+            if (targetsEl) {
+                targetsEl.innerHTML = UNIVERSITIES.map(u =>
+                    `<label style="font-size:12px;display:inline-flex;align-items:center;gap:3px;cursor:pointer">
+                        <input type="checkbox" data-uni="${u.id}" ${selectedUnis.has(u.id) ? "checked" : ""}> ${esc(u.short)}
+                    </label>`
+                ).join("");
+            }
+            if (compareEl) {
+                compareEl.innerHTML = `<ul>` + UNIVERSITIES.map(u =>
+                    `<li><b>${esc(u.short)}</b> <span class="badge">${esc(u.status)}</span>: ${esc(u.note)}</li>`
+                ).join("") + `</ul>`;
+            }
+            const goalsSpan = document.getElementById("goals-summary");
+            if (goalsSpan) {
+                const names = UNIVERSITIES.filter(u => selectedUnis.has(u.id)).map(u => u.short).join(", ") || "FIU";
+                goalsSpan.textContent = `B.S. Computer Science at ${names} (MDC Connect4Success transfer pathway, 2026–2027)`;
+            }
+        }
+        const uniTargetsBox = document.getElementById("uni-targets");
+        if (uniTargetsBox) {
+            uniTargetsBox.addEventListener("change", e => {
+                const id = e.target.dataset.uni;
+                if (!id) return;
+                e.target.checked ? selectedUnis.add(id) : selectedUnis.delete(id);
+                renderUniTools();
+            });
+        }
+        renderUniTools();
+
+        // What-If Simulator buttons inside the Planning Tools accordion
+        const whatifOut = document.getElementById("whatif-output");
+        const btnPhy = document.getElementById("whatif-phy");
+        const btnWork = document.getElementById("whatif-work");
+        const btnUni = document.getElementById("whatif-uni");
+        if (btnPhy) btnPhy.addEventListener("click", () => {
+            whatifOut.innerHTML = "<b>Replan:</b> If PHY 2048 is full in Fall 2026, take <b>CHM 1045 + 1045L</b> (or BSC 2010 + 2010L) to satisfy Natural Science Group 1 on time without delaying your FIU transfer.";
+        });
+        if (btnWork) btnWork.addEventListener("click", () => {
+            whatifOut.innerHTML = "<b>Replan:</b> Working 20 hrs/week lowers your recommended cap to <b>9 credits/term</b> (MAC 2311 + COP 1047C in Fall 2026, then MAC 2312 in Spring 2027 and Summer 2027).";
+        });
+        if (btnUni) btnUni.addEventListener("click", () => {
+            selectedUnis.clear(); selectedUnis.add("uf"); selectedUnis.add("mit");
+            renderUniTools();
+            whatifOut.innerHTML = "<b>Replan:</b> Switched targets to <b>UF + MIT</b>. Added Calculus 3 (MAC 2313) and Physics w/ Calculus 1 &amp; 2 (PHY 2048/2049) as recommended STEM prerequisites.";
+        });
+
+        // Splash screen dismissal (click or auto-dismiss after 3.5 seconds)
+        const splashOverlay = document.getElementById("splash-overlay");
+        if (splashOverlay) {
+            const dismissSplash = () => splashOverlay.classList.add("hidden");
+            splashOverlay.addEventListener("click", dismissSplash);
+            setTimeout(dismissSplash, 3500);
+        }
     </script>
 </body>
 </html>
