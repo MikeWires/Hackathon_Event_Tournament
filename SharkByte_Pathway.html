@@ -3,76 +3,310 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SharkByte Pathway</title>
-    <!-- Simple styling for the pathway layout -->
+    <title>SharkByte Pathway – My Planner</title>
     <style>
-        body { font-family: Arial, Helvetica, sans-serif; margin: 0; padding: 0; background:#f5f5f5; }
-        .container { max-width: 960px; margin: auto; background:#fff; padding:2rem; }
-        header { text-align:center; margin-bottom:2rem; }
-        .step { border-left:4px solid #2c3e50; padding-left:1rem; margin-bottom:1.5rem; }
-        .step h3 { margin-top:0; }
-        footer { text-align:center; margin-top:2rem; font-size:0.9rem; color:#777; }
+        :root {
+            --blue: #1b2f9e;
+            --blue-line: #3b78d8;
+            --strip: #e8ecf6;
+            --page: #f0f0f0;
+            --border: #d5d5d5;
+            --link: #2a5db0;
+        }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: var(--page);
+            font-family: "Comic Sans MS", "Comic Sans", "Chalkboard SE", cursive, sans-serif;
+            color: #111;
+            font-size: 14px;
+        }
+
+        /* ---- Top banner ---- */
+        .topbar { background: var(--blue); height: 46px; border-bottom: 2px solid var(--blue-line); }
+        .strip { background: var(--strip); height: 22px; }
+        .namebar { background: #fff; padding: 4px 46px 6px; border-bottom: 1px solid var(--border); }
+        .namebar h1 {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: 400;
+            font-size: 28px;
+        }
+
+        /* ---- Planner heading ---- */
+        .planner-head { padding: 6px 12px 10px; border-bottom: 1px solid #cfcfcf; }
+        .planner-head h2 { margin: 0; font-weight: 400; font-size: 24px; }
+        .planner-head .goals { margin-top: 6px; font-size: 13px; font-weight: 700; }
+        .planner-head .goals span { font-weight: 400; }
+
+        /* ---- Three-panel layout ---- */
+        .panels {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr 1fr;
+            gap: 8px;
+            padding: 10px 8px;
+            height: calc(100vh - 210px);
+            min-height: 420px;
+        }
+        .panel {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+        }
+        .panel.collapsed .panel-body { display: none; }
+        .panel-tools { display: flex; justify-content: flex-end; gap: 4px; padding: 6px 8px; border-bottom: 1px solid #eee; }
+        .panel-body { overflow-y: auto; flex: 1; padding: 0 10px 12px; }
+        .icon-btn {
+            width: 20px; height: 20px; padding: 0;
+            background: #fff; border: 1px solid var(--link); color: var(--link);
+            border-radius: 3px; font-size: 11px; line-height: 1; cursor: pointer;
+        }
+        .panel h3 { font-weight: 400; font-size: 21px; margin: 14px 10px 10px; display: flex; justify-content: space-between; align-items: center; }
+        .info {
+            display: inline-block; width: 12px; height: 12px; border: 1px solid var(--link);
+            border-radius: 50%; font-size: 9px; line-height: 10px; text-align: center; color: var(--link);
+            vertical-align: super; margin-left: 4px; font-family: Arial, sans-serif;
+        }
+        .dots { color: #444; letter-spacing: 1px; font-size: 14px; }
+
+        /* ---- Planning tools accordion ---- */
+        .accordion { margin: 0 4px; border: 1px solid var(--border); }
+        .acc-item + .acc-item { border-top: 1px solid var(--border); }
+        .acc-head {
+            width: 100%; text-align: left; background: #f4f4f4; border: 0; padding: 10px 12px;
+            font: inherit; font-size: 13px; color: #111; cursor: pointer; display: flex; align-items: center; gap: 10px;
+        }
+        .acc-head .chev { color: var(--link); font-size: 12px; width: 12px; transition: transform .15s; }
+        .acc-item.open .acc-head { border-bottom: 2px solid var(--blue-line); }
+        .acc-item.open .chev { transform: rotate(180deg); }
+        .acc-body { display: none; padding: 10px 14px; font-size: 12.5px; line-height: 1.5; background: #fff; }
+        .acc-item.open .acc-body { display: block; }
+        .acc-body ul { margin: 4px 0; padding-left: 18px; }
+        .acc-body li { margin-bottom: 4px; }
+
+        /* ---- Middle: course picker ---- */
+        .picker-bar { display: flex; align-items: center; gap: 12px; margin: 14px 10px 6px; font-size: 13px; }
+        .btn {
+            background: #e6f0fb; border: 1px solid #8fb3e0; border-radius: 3px; padding: 5px 10px;
+            font: inherit; font-size: 12px; color: #12306b; cursor: pointer;
+        }
+        .btn:disabled { opacity: .5; cursor: default; }
+        .picker h4 { font-weight: 400; font-size: 20px; margin: 14px 10px 8px; }
+        .course-list { border: 1px solid #e4e4e4; border-radius: 4px; margin: 0 6px; }
+        .course-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-bottom: 1px solid #eee; }
+        .course-row:last-child { border-bottom: 0; }
+        .course-row input { width: 16px; height: 16px; margin-top: 3px; }
+        .course-row .code { font-weight: 700; font-size: 13px; }
+        .course-row .name { font-size: 12.5px; }
+        .course-row .note { font-size: 11.5px; color: #555; margin-top: 2px; }
+        .course-row.added { opacity: .45; }
+        .badge { display: inline-block; background: #fdecea; color: #a12622; border-radius: 3px; padding: 0 5px; font-size: 10.5px; margin-left: 6px; }
+
+        /* ---- Right: academic plan ---- */
+        .term-card { border: 1px solid var(--border); border-radius: 4px; margin: 0 4px 12px; padding: 12px 16px 6px; }
+        .term-card h4 { font-weight: 400; font-size: 20px; margin: 0; display: flex; justify-content: space-between; align-items: center; }
+        .term-card .starts { font-size: 11.5px; margin-top: 2px; }
+        .term-card .count { margin: 22px 0 0; font-size: 13px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+        .plan-row { min-height: 50px; border-bottom: 1px solid #e6e6e6; display: flex; align-items: center; justify-content: space-between; font-size: 12.5px; }
+        .plan-row .remove { background: none; border: 0; color: var(--link); cursor: pointer; font: inherit; font-size: 11.5px; }
+        .plan-row .code { font-weight: 700; margin-right: 6px; }
+
+        @media (max-width: 900px) {
+            .panels { grid-template-columns: 1fr; height: auto; }
+            .panel { max-height: 80vh; }
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>SharkByte Pathway</h1>
-            <p id="description">A brief description of the pathway goes here.</p>
-        </header>
-        <section id="steps">
-            <div id="status" style="font-style: italic; color: #555;">Loading pathway steps...</div>
-            <!-- Dynamically injected steps will appear here -->
-        </section>
-        <footer>
-            <p>Powered by Swarms API</p>
-        </footer>
+    <div class="topbar"></div>
+    <div class="strip"></div>
+    <div class="namebar"><h1>Insert Name</h1></div>
+
+    <div class="planner-head">
+        <h2>My Planner</h2>
+        <div class="goals">My Goals: <span>B.S. Computer Science at FIU (MDC Connect4Success transfer pathway, 2026–2027)</span></div>
     </div>
-    <script>
-        // === Swarms API integration ===
-        // Replace the placeholder with your actual API key if you plan to keep it client‑side (not recommended for production).
-        const SWARMS_API_KEY = "sk-be63031381600a5ae5fe1c68ee41fc9928f0898903a1e4e28e76dfb393f43294";
-        const SWARMS_ENDPOINT = "https://api.swarms.ai/v1/pathway/steps"; // Example endpoint – adjust as needed
 
-        // Example function to fetch pathway steps and render them
-        async function loadPathwaySteps() {
-            try {
-                const response = await fetch(SWARMS_ENDPOINT, {
-                    method: "GET",
-                    headers: {
-                        "Authorization": `Bearer ${SWARMS_API_KEY}`,
-                        "Content-Type": "application/json"
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`API error: ${response.status}`);
-                }
-                const data = await response.json();
-                renderSteps(data.steps || []);
-            } catch (err) {
-                console.error("Failed to load pathway steps:", err);
-                const stepsDiv = document.getElementById("steps");
-                stepsDiv.innerHTML = `<p style="color:red;">Unable to load steps – see console for details.</p>`;
-            }
-        }
-
-        function renderSteps(steps) {
-            const container = document.getElementById("steps");
-            if (steps.length === 0) {
-                container.innerHTML = "<p>No steps available.</p>";
-                return;
-            }
-            const html = steps.map((step, idx) => `
-                <div class="step" id="step-${idx}">
-                    <h3>Step ${idx + 1}: ${step.title}</h3>
-                    <p>${step.description}</p>
+    <main class="panels">
+        <!-- LEFT: Planning Tools -->
+        <section class="panel" id="panel-left">
+            <div class="panel-tools"><button class="icon-btn" id="toggle-left" title="Collapse panel">←</button></div>
+            <div class="panel-body">
+                <h3>Planning Tools <span class="info" title="Key requirements from the transfer guide">i</span></h3>
+                <div class="accordion">
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> Program Overview</button>
+                        <div class="acc-body">
+                            <ul>
+                                <li>Degree: B.S. in Computer Science</li>
+                                <li>Destination: FIU – College of Engineering &amp; Computing</li>
+                                <li>Origin: Miami Dade College (Connect4Success)</li>
+                                <li>Catalog: 2026–2027</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="acc-item">
+                        <button class="acc-head"><span class="chev">⌄</span> Admission &amp; Progression</button>
+                        <div class="acc-body">
+                            <ul>
+                                <li>Complete an Associate in Arts (AA) degree at MDC.</li>
+                                <li>Minimum cumulative transfer GPA of 2.0.</li>
+                                <li>Grade of "C" or higher in all prerequisites.</li>
+                                <li>Pass prerequisites within two attempts; drops/withdrawals (W) count as attempts.</li>
+                                <li><b>MAC 2311 (Calculus 1) must be completed before transfer.</b></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="acc-item open">
+                        <button class="acc-head"><span class="chev">⌄</span> Advice for Students</button>
+                        <div class="acc-body">
+                            <ul>
+                                <li>Take math and science every term to stay on track.</li>
+                                <li>Choose science courses that form a sequence totaling at least 8 credits with labs.</li>
+                                <li>COP 2805C at MDC earns upper-division credit (FIU COP 3337).</li>
+                                <li>Finish MAD 2104 and COP 2805C before completing your AA.</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-            `).join("\n");
-            container.innerHTML = html;
+            </div>
+        </section>
+
+        <!-- MIDDLE: Course picker -->
+        <section class="panel picker" id="panel-middle">
+            <div class="panel-tools">
+                <button class="icon-btn" id="shrink" title="Collapse side panels">⤡</button>
+                <button class="icon-btn" id="expand" title="Restore side panels">⤢</button>
+            </div>
+            <div class="panel-body">
+                <div class="picker-bar">
+                    <span><span id="selected-count">0</span> item(s) selected</span>
+                    <button class="btn" id="add-btn" disabled>Add to Term</button>
+                </div>
+                <h4>Fall 2026</h4>
+                <div class="course-list" id="course-list"></div>
+            </div>
+        </section>
+
+        <!-- RIGHT: Academic plan -->
+        <section class="panel" id="panel-right">
+            <div class="panel-tools"><button class="icon-btn" id="toggle-right" title="Collapse panel">→</button></div>
+            <div class="panel-body">
+                <h3>My Academic Plan <span class="dots">•••</span></h3>
+                <div class="term-card">
+                    <h4>Fall 2026 <span class="dots">•••</span></h4>
+                    <div class="starts">Starts August 24, 2026</div>
+                    <div class="count">Courses (<span id="plan-count">0</span>)</div>
+                    <div id="plan-rows"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Course data taken from the 2026–2027 MDC → FIU Computer Science transfer guide.
+        const COURSES = [
+            { id: "MAC2311", code: "MAC 2311", name: "Calculus and Analytical Geometry 1", note: "FIU MAC 2311", required: "Required before transfer" },
+            { id: "MAC2312", code: "MAC 2312", name: "Calculus and Analytical Geometry 2", note: "FIU MAC 2312" },
+            { id: "COP1047C", code: "COP 1047C", name: "Python Programming", note: "FIU COP 2047" },
+            { id: "MAD2104", code: "MAD 2104", name: "Discrete Mathematics", note: "FIU MAD 2104 (recommended)" },
+            { id: "COP2805C", code: "COP 2805C", name: "Advanced Java Programming", note: "FIU COP 3337 (upper-division credit, recommended)" },
+            { id: "CHM1045", code: "CHM 1045 + 1045L", name: "General Chemistry 1 + Lab", note: "Natural Science – Group 1 (State Core)" },
+            { id: "PHY2048", code: "PHY 2048 + 2048L", name: "Physics with Calculus 1 + Lab", note: "Natural Science – Group 1 (State Core)" },
+            { id: "BSC2010", code: "BSC 2010 + 2010L", name: "Principles of Biology 1 + Lab", note: "Natural Science – Group 1 (State Core)" }
+        ];
+
+        const plan = [];
+        const selected = new Set();
+
+        const listEl = document.getElementById("course-list");
+        const planRows = document.getElementById("plan-rows");
+        const addBtn = document.getElementById("add-btn");
+
+        function esc(s) {
+            return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
         }
 
-        // Load steps on page load
-        document.addEventListener("DOMContentLoaded", loadPathwaySteps);
+        function renderPicker() {
+            listEl.innerHTML = COURSES.map(c => {
+                const added = plan.includes(c.id);
+                return `
+                <label class="course-row ${added ? "added" : ""}">
+                    <input type="checkbox" data-id="${c.id}" ${added ? "disabled" : ""} ${selected.has(c.id) ? "checked" : ""}>
+                    <div>
+                        <div><span class="code">${esc(c.code)}</span>${c.required ? `<span class="badge">${esc(c.required)}</span>` : ""}</div>
+                        <div class="name">${esc(c.name)}</div>
+                        <div class="note">${esc(c.note)}</div>
+                    </div>
+                </label>`;
+            }).join("");
+            document.getElementById("selected-count").textContent = selected.size;
+            addBtn.disabled = selected.size === 0;
+        }
+
+        function renderPlan() {
+            document.getElementById("plan-count").textContent = plan.length;
+            const rows = plan.map(id => {
+                const c = COURSES.find(x => x.id === id);
+                return `<div class="plan-row">
+                    <span><span class="code">${esc(c.code)}</span>${esc(c.name)}</span>
+                    <button class="remove" data-id="${id}">Remove</button>
+                </div>`;
+            });
+            while (rows.length < 5) rows.push('<div class="plan-row"></div>'); // empty slots as in the template
+            planRows.innerHTML = rows.join("");
+        }
+
+        listEl.addEventListener("change", e => {
+            const id = e.target.dataset.id;
+            if (!id) return;
+            e.target.checked ? selected.add(id) : selected.delete(id);
+            document.getElementById("selected-count").textContent = selected.size;
+            addBtn.disabled = selected.size === 0;
+        });
+
+        addBtn.addEventListener("click", () => {
+            selected.forEach(id => { if (!plan.includes(id)) plan.push(id); });
+            selected.clear();
+            renderPicker();
+            renderPlan();
+        });
+
+        planRows.addEventListener("click", e => {
+            const id = e.target.dataset.id;
+            if (!id) return;
+            plan.splice(plan.indexOf(id), 1);
+            renderPicker();
+            renderPlan();
+        });
+
+        // Accordion
+        document.querySelectorAll(".acc-head").forEach(h =>
+            h.addEventListener("click", () => h.parentElement.classList.toggle("open")));
+
+        // Panel collapse controls
+        const left = document.getElementById("panel-left");
+        const right = document.getElementById("panel-right");
+        const panels = document.querySelector(".panels");
+        function layout() {
+            const l = left.classList.contains("collapsed"), r = right.classList.contains("collapsed");
+            panels.style.gridTemplateColumns = `${l ? "48px" : "1fr"} 1.1fr ${r ? "48px" : "1fr"}`;
+        }
+        document.getElementById("toggle-left").addEventListener("click", () => { left.classList.toggle("collapsed"); layout(); });
+        document.getElementById("toggle-right").addEventListener("click", () => { right.classList.toggle("collapsed"); layout(); });
+        document.getElementById("shrink").addEventListener("click", () => {
+            left.classList.add("collapsed"); right.classList.add("collapsed"); layout();
+        });
+        document.getElementById("expand").addEventListener("click", () => {
+            left.classList.remove("collapsed"); right.classList.remove("collapsed"); layout();
+        });
+
+        renderPicker();
+        renderPlan();
     </script>
 </body>
 </html>
